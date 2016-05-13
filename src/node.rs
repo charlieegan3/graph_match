@@ -10,7 +10,7 @@ pub struct Node {
 }
 
 impl Node {
-    pub fn equal(&self, node: Node) -> bool {
+    pub fn equal(&self, node: &Node) -> bool {
         self.identifier == node.identifier &&
             self.attributes == node.attributes
     }
@@ -25,7 +25,7 @@ mod tests {
         let mut attributes = HashMap::new();
         attributes.insert("key".to_string(), "value".to_string());
         let mut attributes2 = HashMap::new();
-        attributes.insert("core".to_string(), "worth".to_string());
+        attributes2.insert("core".to_string(), "worth".to_string());
 
         let node0 = Node {
             identifier: "nodeid".to_string(),
@@ -42,7 +42,7 @@ mod tests {
             attributes: Some(attributes2.clone()),
             first_outgoing_edge: None,
         };
-        assert!(node0.equal(node1));
-        assert_eq!(node0.equal(node2), false);
+        assert!(node0.equal(&node1));
+        assert_eq!(node0.equal(&node2), false);
     }
 }

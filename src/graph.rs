@@ -4,8 +4,8 @@ use edge;
 
 // http://smallcultfollowing.com/babysteps/blog/2015/04/06/modeling-graphs-in-rust-using-vector-indices/
 pub struct Graph {
-    nodes: Vec<node::Node>,
-    edges: Vec<edge::Edge>,
+    pub nodes: Vec<node::Node>,
+    pub edges: Vec<edge::Edge>,
 }
 
 impl Graph {

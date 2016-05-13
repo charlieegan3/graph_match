@@ -26,7 +26,7 @@ mod tests {
         let mut attributes = HashMap::new();
         attributes.insert("key".to_string(), "value".to_string());
         let mut attributes2 = HashMap::new();
-        attributes.insert("core".to_string(), "worth".to_string());
+        attributes2.insert("core".to_string(), "worth".to_string());
 
         let edge0 = Edge {
             identifier: "edgeid".to_string(),
