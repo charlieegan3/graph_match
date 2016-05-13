@@ -1,4 +1,6 @@
 mod graph;
+mod node;
+mod edge;
 
 // there is no code in here yet :)
 

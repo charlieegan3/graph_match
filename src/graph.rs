@@ -1,23 +1,25 @@
 use std::collections::HashMap;
-// http://smallcultfollowing.com/babysteps/blog/2015/04/06/modeling-graphs-in-rust-using-vector-indices/
+use node;
+use edge;
 
+// http://smallcultfollowing.com/babysteps/blog/2015/04/06/modeling-graphs-in-rust-using-vector-indices/
 pub struct Graph {
-    nodes: Vec<NodeData>,
-    edges: Vec<EdgeData>,
+    nodes: Vec<node::Node>,
+    edges: Vec<edge::Edge>,
 }
 
 impl Graph {
     pub fn add_node(&mut self, identifier: String, attributes: Option<HashMap<String,String>>)
-        -> NodeIndex {
+        -> node::Index {
         let index = self.nodes.len();
-        self.nodes.push(NodeData { identifier: identifier, first_outgoing_edge: None, attributes: attributes });
+        self.nodes.push(node::Node { identifier: identifier, first_outgoing_edge: None, attributes: attributes });
         index
     }
 
-    pub fn add_edge(&mut self, source: NodeIndex, target: NodeIndex, identifier: String, attributes: Option<HashMap<String,String>>) {
+    pub fn add_edge(&mut self, source: node::Index, target: node::Index, identifier: String, attributes: Option<HashMap<String,String>>) {
         let edge_index = self.edges.len();
         let node_data = &mut self.nodes[source];
-        self.edges.push(EdgeData {
+        self.edges.push(edge::Edge {
             identifier: identifier,
             target: target,
             next_outgoing_edge: node_data.first_outgoing_edge,
@@ -26,14 +28,14 @@ impl Graph {
         node_data.first_outgoing_edge = Some(edge_index);
     }
 
-    pub fn successors(&self, source: NodeIndex) -> Successors {
+    pub fn successors(&self, source: node::Index) -> Successors {
         let first_outgoing_edge = self.nodes[source].first_outgoing_edge;
         Successors { graph: self, current_edge_index: first_outgoing_edge }
     }
 
     pub fn print(self) {
         for n in 0..self.nodes.len() {
-            print!("Node {} goes to: ", n);
+            print!("node::Node {} goes to: ", n);
             let mut suc = self.successors(n);
             loop {
                 match suc.next() {
@@ -45,30 +47,15 @@ impl Graph {
     }
 }
 
-pub type NodeIndex = usize;
-pub struct NodeData {
-    identifier: String,
-    attributes: Option<HashMap<String, String>>,
-    first_outgoing_edge: Option<EdgeIndex>,
-}
-
-pub type EdgeIndex = usize;
-pub struct EdgeData {
-    identifier: String,
-    target: NodeIndex,
-    attributes: Option<HashMap<String, String>>,
-    next_outgoing_edge: Option<EdgeIndex>,
-}
-
 pub struct Successors<'graph> {
     graph: &'graph Graph,
-    current_edge_index: Option<EdgeIndex>,
+    current_edge_index: Option<edge::Index>,
 }
 
 impl<'graph> Iterator for Successors<'graph> {
-    type Item = NodeIndex;
+    type Item = node::Index;
 
-    fn next(&mut self) -> Option<NodeIndex> {
+    fn next(&mut self) -> Option<node::Index> {
         match self.current_edge_index {
             None => None,
             Some(edge_num) => {
