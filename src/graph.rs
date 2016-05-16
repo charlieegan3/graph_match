@@ -33,6 +33,27 @@ impl Graph {
         Successors { graph: self, current_edge_index: first_outgoing_edge }
     }
 
+    pub fn edges_for_node(&self, node_index: node::Index) -> Vec<edge::Index> {
+        let mut edge_indexes: Vec<edge::Index> = vec![];
+        match self.nodes[node_index].first_outgoing_edge {
+            Some(edge_index) => {
+                let mut edge = &self.edges[edge_index];
+                edge_indexes.push(edge_index);
+                loop {
+                    match edge.next_outgoing_edge {
+                        Some(edge_index) => {
+                            edge = &self.edges[edge_index];
+                            edge_indexes.push(edge_index);
+                        },
+                        None => { break; }
+                    }
+                }
+            },
+            None => {}
+        }
+        return edge_indexes;
+    }
+
     pub fn print(self) {
         for n in 0..self.nodes.len() {
             print!("node::Node {} goes to: ", n);
@@ -159,5 +180,17 @@ mod tests {
             },
             None => assert!(false),
         }
+    }
+
+    #[test]
+    fn node_edges() {
+        let mut graph = Graph { nodes: vec![], edges: vec![] };
+        let node0 = graph.add_node("node0".to_string(), None);
+        graph.add_edge(node0, node0, "edge0".to_string(), None);
+        graph.add_edge(node0, node0, "edge1".to_string(), None);
+        graph.add_edge(node0, node0, "edge1".to_string(), None);
+
+        let edges = graph.edges_for_node(node0);
+        assert_eq!(edges, vec![2, 1, 0]);
     }
 }
