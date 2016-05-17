@@ -10,7 +10,7 @@ pub struct Node {
 }
 
 impl Node {
-    pub fn equal(&self, node: &Node) -> bool {
+    pub fn matches(&self, node: &Node) -> bool {
         self.identifier == node.identifier &&
             self.attributes == node.attributes
     }
@@ -42,7 +42,7 @@ mod tests {
             attributes: Some(attributes2.clone()),
             first_outgoing_edge: None,
         };
-        assert!(node0.equal(&node1));
-        assert_eq!(node0.equal(&node2), false);
+        assert!(node0.matches(&node1));
+        assert_eq!(node0.matches(&node2), false);
     }
 }

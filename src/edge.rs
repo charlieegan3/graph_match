@@ -11,7 +11,7 @@ pub struct Edge {
 }
 
 impl Edge {
-    pub fn equal(&self, edge: &Edge) -> bool {
+    pub fn matches(&self, edge: &Edge) -> bool {
         self.identifier == edge.identifier &&
             self.attributes == edge.attributes
     }
@@ -46,7 +46,7 @@ mod tests {
             next_outgoing_edge: None,
             target: 0,
         };
-        assert!(edge0.equal(&edge1));
-        assert_eq!(edge0.equal(&edge2), false);
+        assert!(edge0.matches(&edge1));
+        assert_eq!(edge0.matches(&edge2), false);
     }
 }

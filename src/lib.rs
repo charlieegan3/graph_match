@@ -5,7 +5,7 @@ mod edge;
 fn recusive_node_match(
     query_root_index: usize, graph_root_index: usize, query: &graph::Graph, graph: &graph::Graph)
     -> bool {
-        if !query.nodes[query_root_index].equal(&graph.nodes[graph_root_index]) {
+        if !query.nodes[query_root_index].matches(&graph.nodes[graph_root_index]) {
             return false;
         }
         if query.edges_for_node(query_root_index).len() == 0 {
@@ -15,14 +15,14 @@ fn recusive_node_match(
         for query_edge_index in query.edges_for_node(query_root_index) {
             let mut matching_edge_in_graph: Option<edge::Index> = None;
             for graph_edge_index in graph.edges_for_node(graph_root_index) {
-                if query.edges[query_edge_index].equal(&graph.edges[graph_edge_index]) {
+                if query.edges[query_edge_index].matches(&graph.edges[graph_edge_index]) {
                     matching_edge_in_graph = Some(graph_edge_index);
                     break;
                 }
             }
             match matching_edge_in_graph {
                 Some(edge) => {
-                    match query.nodes[query.edges[query_edge_index].target].equal(&graph.nodes[graph.edges[edge].target]) {
+                    match query.nodes[query.edges[query_edge_index].target].matches(&graph.nodes[graph.edges[edge].target]) {
                         true => { return recusive_node_match(
                                             query.edges[query_edge_index].target,
                                             graph.edges[matching_edge_in_graph.unwrap()].target,
@@ -43,7 +43,7 @@ pub fn match_graph(query: graph::Graph, query_root_index: node::Index, graph: gr
 
     let mut graph_root_index: Option<usize> = None;
     for i in 0..graph.nodes.len() {
-        if query_root_node.equal(&graph.nodes[i]) {
+        if query_root_node.matches(&graph.nodes[i]) {
             graph_root_index = Some(i);
             break;
         }
