@@ -1,5 +1,7 @@
 # graph_match
 
+[![Build Status](https://travis-ci.org/charlieegan3/graph_match.svg?branch=master)](https://travis-ci.org/charlieegan3/graph_match)
+
 A library for matching patterns in directed graphs. The library implements 
 'queries' for graphs as graphs that represent in part the nodes in the graph 
 to be matched.
