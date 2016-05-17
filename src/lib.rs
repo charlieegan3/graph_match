@@ -19,11 +19,47 @@ pub fn match_graph(query: graph::Graph, query_root_index: node::Index, graph: gr
     return matching::recusive_node_match(query_root_index, graph_root_index.unwrap(), &query, &graph);
 }
 
+pub fn expand_subgraph(graph: &graph::Graph, root_index: node::Index) -> Vec<node::Index> {
+    let mut node_list = vec![root_index];
+    let connected_nodes: Vec<node::Index> = graph.edges_for_node(root_index).iter().map(|&e| graph.edges[e].target).collect();
+    for node in connected_nodes {
+        for inner_node in expand_subgraph(graph, node) {
+            node_list.push(inner_node);
+        }
+    }
+
+    return node_list;
+}
+
 #[cfg(test)]
 mod tests {
     use std::collections::HashMap;
     use super::*;
     use graph;
+
+    #[test]
+    fn complete_traverse() {
+        let mut simple_graph = graph::Graph { nodes: vec![], edges: vec![] };
+        let node0 = simple_graph.add_node("node0".to_string(), None);
+        let node1 = simple_graph.add_node("node1".to_string(), None);
+        let node2 = simple_graph.add_node("node2".to_string(), None);
+        simple_graph.add_edge(node0, node1, "edge0".to_string(), None);
+        simple_graph.add_edge(node1, node2, "edge1".to_string(), None);
+
+        assert_eq!(expand_subgraph(&simple_graph, 0), vec![0,1,2]);
+    }
+
+    #[test]
+    fn incomplete_traverse() {
+        let mut simple_graph = graph::Graph { nodes: vec![], edges: vec![] };
+        let node0 = simple_graph.add_node("node0".to_string(), None);
+        let node1 = simple_graph.add_node("node1".to_string(), None);
+        let node2 = simple_graph.add_node("node2".to_string(), None);
+        simple_graph.add_edge(node0, node1, "edge0".to_string(), None);
+        simple_graph.add_edge(node2, node1, "edge1".to_string(), None);
+
+        assert_eq!(expand_subgraph(&simple_graph, 0), vec![0,1]);
+    }
 
     #[test]
     fn match_complete_graph() {
