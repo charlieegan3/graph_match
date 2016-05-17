@@ -1,5 +1,5 @@
 [package]
-name = "graph-match"
+name = "graph_match"
 version = "0.1.0"
 authors = ["Charlie Egan <git@charlieegan3.com>"]
 
