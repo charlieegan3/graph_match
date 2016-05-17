@@ -11,8 +11,32 @@ pub struct Node {
 
 impl Node {
     pub fn matches(&self, node: &Node) -> bool {
-        self.identifier == node.identifier &&
-            self.attributes == node.attributes
+        // test the attributes
+        match self.attributes {
+            Some(ref attrs) => {
+                // test the node's attributes
+                match node.attributes {
+                    Some(ref node_attrs) => {
+                        // for each of the query attributes, test the node
+                        for pair in attrs {
+                            match node_attrs.get(pair.0) {
+                                Some(value) => {
+                                    if value != pair.1 {
+                                        return false
+                                    }
+                                },
+                                None => return false
+                            }
+                        }
+                    },
+                    // when node is empty and query is not then the node is not matched
+                    None => return false
+                }
+            },
+            // no attributes means a blank query
+            None => return true
+        }
+        return true;
     }
 }
 

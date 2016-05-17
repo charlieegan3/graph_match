@@ -12,8 +12,27 @@ pub struct Edge {
 
 impl Edge {
     pub fn matches(&self, edge: &Edge) -> bool {
-        self.identifier == edge.identifier &&
-            self.attributes == edge.attributes
+        match self.attributes {
+            Some(ref attrs) => {
+                match edge.attributes {
+                    Some(ref edge_attrs) => {
+                        for pair in attrs {
+                            match edge_attrs.get(pair.0) {
+                                Some(value) => {
+                                    if value != pair.1 {
+                                        return false
+                                    }
+                                },
+                                None => return false
+                            }
+                        }
+                    },
+                    None => return false
+                }
+            },
+            None => return true
+        }
+        return true;
     }
 }
 

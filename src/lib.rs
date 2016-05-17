@@ -55,26 +55,12 @@ pub fn match_graph(query: graph::Graph, query_root_index: node::Index, graph: gr
 
 #[cfg(test)]
 mod tests {
+    use std::collections::HashMap;
     use super::*;
     use graph;
 
     #[test]
-    fn match_two_node_graph() {
-        let mut simple_graph = graph::Graph { nodes: vec![], edges: vec![] };
-        let node0 = simple_graph.add_node("node0".to_string(), None);
-        let node1 = simple_graph.add_node("node1".to_string(), None);
-        simple_graph.add_edge(node0, node1, "edge0".to_string(), None);
-
-        let mut query_graph = graph::Graph { nodes: vec![], edges: vec![] };
-        let node0 = query_graph.add_node("node0".to_string(), None);
-        let node1 = query_graph.add_node("node1".to_string(), None);
-        query_graph.add_edge(node0, node1, "edge0".to_string(), None);
-
-        assert_eq!(match_graph(query_graph, 0, simple_graph), true);
-    }
-
-    #[test]
-    fn match_three_node_graph() {
+    fn match_complete_graph() {
         let mut simple_graph = graph::Graph { nodes: vec![], edges: vec![] };
         let node0 = simple_graph.add_node("node0".to_string(), None);
         let node1 = simple_graph.add_node("node1".to_string(), None);
@@ -93,7 +79,7 @@ mod tests {
     }
 
     #[test]
-    fn match_three_node_subgraph() {
+    fn match_subgraph() {
         let mut simple_graph = graph::Graph { nodes: vec![], edges: vec![] };
         let node0 = simple_graph.add_node("node0".to_string(), None);
         let node1 = simple_graph.add_node("node1".to_string(), None);
@@ -114,19 +100,19 @@ mod tests {
     }
 
     #[test]
-    fn match_failure() {
+    fn fail_to_match() {
+        let mut attributes = HashMap::new();
+        attributes.insert("key".to_string(), "value".to_string());
         let mut simple_graph = graph::Graph { nodes: vec![], edges: vec![] };
-        let node0 = simple_graph.add_node("node0".to_string(), None);
-        let node1 = simple_graph.add_node("node1".to_string(), None);
-        simple_graph.add_edge(node0, node1, "edge0".to_string(), None);
-        simple_graph.add_edge(node1, node0, "edge1".to_string(), None);
+        let node0 = simple_graph.add_node("node0".to_string(), Some(attributes.clone()));
+        let node1 = simple_graph.add_node("node1".to_string(), Some(attributes.clone()));
+        simple_graph.add_edge(node0, node1, "edge0".to_string(), Some(attributes.clone()));
 
+        attributes.insert("key2".to_string(), "value2".to_string());
         let mut query_graph = graph::Graph { nodes: vec![], edges: vec![] };
-        let node0 = query_graph.add_node("node0".to_string(), None);
-        let node1 = query_graph.add_node("node1".to_string(), None);
-        let node2 = query_graph.add_node("node2".to_string(), None);
-        query_graph.add_edge(node0, node1, "edge0".to_string(), None);
-        query_graph.add_edge(node1, node2, "edge1".to_string(), None);
+        let node0 = query_graph.add_node("node0".to_string(), Some(attributes.clone()));
+        let node1 = query_graph.add_node("node1".to_string(), Some(attributes.clone()));
+        query_graph.add_edge(node0, node1, "edge0".to_string(), Some(attributes.clone()));
 
         assert_eq!(match_graph(query_graph, 0, simple_graph), false);
     }
