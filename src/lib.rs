@@ -2,9 +2,9 @@ pub mod graph;
 mod node;
 mod edge;
 
-mod matching;
+pub mod matching;
 
-pub fn match_graph(query: graph::Graph, query_root_index: node::Index, graph: graph::Graph) -> bool {
+pub fn match_graph(query: graph::Graph, query_root_index: node::Index, graph: graph::Graph) -> matching::MatchedComponents {
     let query_root_node = &query.nodes[query_root_index];
 
     let mut graph_root_index: Option<usize> = None;
@@ -14,9 +14,9 @@ pub fn match_graph(query: graph::Graph, query_root_index: node::Index, graph: gr
             break;
         }
     }
-    if graph_root_index.is_none() { return false; }
+    if graph_root_index.is_none() { return matching::MatchedComponents { list: vec![] } }
 
-    return matching::recusive_node_match(query_root_index, graph_root_index.unwrap(), &query, &graph);
+    return matching::recusive_node_match(query_root_index, graph_root_index.unwrap(), &query, &graph, None);
 }
 
 pub fn expand_subgraph(

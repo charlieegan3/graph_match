@@ -57,7 +57,15 @@ fn match_complete_graph() {
     query_graph.add_edge(node0, node1, "edge0".to_string(), None);
     query_graph.add_edge(node1, node2, "edge1".to_string(), None);
 
-    assert_eq!(graph_match::match_graph(query_graph, 0, simple_graph), true);
+    let expected = graph_match::matching::MatchedComponents {
+        list: vec![
+            graph_match::matching::Component { from_edge: None, node: 0},
+            graph_match::matching::Component { from_edge: Some(0), node: 1},
+            graph_match::matching::Component { from_edge: Some(1), node: 2},
+        ]
+    };
+
+    assert_eq!(graph_match::match_graph(query_graph, 0, simple_graph), expected);
 }
 
 #[test]
@@ -78,7 +86,15 @@ fn match_subgraph() {
     query_graph.add_edge(node0, node1, "edge0".to_string(), None);
     query_graph.add_edge(node1, node2, "edge1".to_string(), None);
 
-    assert_eq!(graph_match::match_graph(query_graph, 0, simple_graph), true);
+    let expected = graph_match::matching::MatchedComponents {
+        list: vec![
+            graph_match::matching::Component { from_edge: None, node: 0},
+            graph_match::matching::Component { from_edge: Some(0), node: 1},
+            graph_match::matching::Component { from_edge: Some(1), node: 2},
+        ]
+    };
+
+    assert_eq!(graph_match::match_graph(query_graph, 0, simple_graph), expected);
 }
 
 #[test]
@@ -96,5 +112,7 @@ fn match_failure() {
     let node1 = query_graph.add_node("node1".to_string(), Some(attributes.clone()));
     query_graph.add_edge(node0, node1, "edge0".to_string(), Some(attributes.clone()));
 
-    assert_eq!(graph_match::match_graph(query_graph, 0, simple_graph), false);
+    let expected = graph_match::matching::MatchedComponents { list: vec![] };
+
+    assert_eq!(graph_match::match_graph(query_graph, 0, simple_graph), expected);
 }
