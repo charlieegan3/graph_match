@@ -12,7 +12,7 @@ fn traversal_simple() {
     simple_graph.add_edge(node0, node1, "edge0".to_string(), None);
     simple_graph.add_edge(node1, node2, "edge1".to_string(), None);
 
-    assert_eq!(graph_match::expand_subgraph(&simple_graph, 0, &vec![]), vec![0,1,2]);
+    assert_eq!(vec![0,1,2], graph_match::expand_subgraph(&simple_graph, 0, &vec![]));
 }
 
 #[test]
@@ -24,7 +24,7 @@ fn traveral_incomplete() {
     simple_graph.add_edge(node0, node1, "edge0".to_string(), None);
     simple_graph.add_edge(node2, node1, "edge1".to_string(), None);
 
-    assert_eq!(graph_match::expand_subgraph(&simple_graph, 0, &vec![]), vec![0,1]);
+    assert_eq!(vec![0,1], graph_match::expand_subgraph(&simple_graph, 0, &vec![]));
 }
 
 #[test]
@@ -38,7 +38,7 @@ fn traveral_restricted() {
     simple_graph.add_edge(node1, node2, "banned".to_string(), None);
     simple_graph.add_edge(node1, node3, "edge2".to_string(), None);
 
-    assert_eq!(graph_match::expand_subgraph(&simple_graph, 0, &vec!["banned".to_string()]), vec![0,1,3]);
+    assert_eq!(vec![0,1,3], graph_match::expand_subgraph(&simple_graph, 0, &vec!["banned".to_string()]));
 }
 
 #[test]
@@ -65,7 +65,7 @@ fn match_complete_graph() {
         ]
     };
 
-    assert_eq!(graph_match::match_graph(query_graph, 0, simple_graph), expected);
+    assert_eq!(expected, graph_match::match_graph(query_graph, 0, simple_graph));
 }
 
 #[test]
@@ -94,7 +94,7 @@ fn match_subgraph() {
         ]
     };
 
-    assert_eq!(graph_match::match_graph(query_graph, 0, simple_graph), expected);
+    assert_eq!(expected, graph_match::match_graph(query_graph, 0, simple_graph));
 }
 
 #[test]
@@ -114,5 +114,5 @@ fn match_failure() {
 
     let expected = graph_match::matching::MatchedComponents { list: vec![] };
 
-    assert_eq!(graph_match::match_graph(query_graph, 0, simple_graph), expected);
+    assert_eq!(expected, graph_match::match_graph(query_graph, 0, simple_graph));
 }

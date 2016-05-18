@@ -99,10 +99,10 @@ mod tests {
         let node1 = graph.add_node("node1".to_string(), None);
         graph.add_edge(node0, node1, "edge0".to_string(), None);
 
-        assert_eq!(graph.nodes.len(), 2);
-        assert_eq!(graph.edges.len(), 1);
+        assert_eq!(2, graph.nodes.len());
+        assert_eq!(1, graph.edges.len());
         match graph.nodes[0].first_outgoing_edge {
-            Some(index) => assert_eq!(graph.edges[index].target, 1),
+            Some(index) => assert_eq!(1, graph.edges[index].target),
             None => assert!(false),
         }
     }
@@ -122,7 +122,7 @@ mod tests {
         for e in graph.edges {
             targets.push(e.target);
         }
-        assert_eq!(targets, [1,2,3]);
+        assert_eq!(vec![1,2,3], targets);
     }
 
     #[test]
@@ -140,7 +140,7 @@ mod tests {
                 None => break,
             }
         }
-        assert_eq!(targets, [0,0,0]);
+        assert_eq!(vec![0,0,0], targets);
     }
 
     #[test]
@@ -154,7 +154,7 @@ mod tests {
         match graph.nodes[node0].attributes {
             Some(ref attrs) => {
                 match attrs.get("key") {
-                    Some(value) => assert_eq!(value, &"value".to_string()),
+                    Some(value) => assert_eq!(&"value".to_string(), value),
                     None => assert!(false),
                 }
             },
@@ -174,7 +174,7 @@ mod tests {
         match graph.edges[0].attributes {
             Some(ref attrs) => {
                 match attrs.get("key") {
-                    Some(value) => assert_eq!(value, &"value".to_string()),
+                    Some(value) => assert_eq!(&"value".to_string(), value),
                     None => assert!(false),
                 }
             },
@@ -190,7 +190,6 @@ mod tests {
         graph.add_edge(node0, node0, "edge1".to_string(), None);
         graph.add_edge(node0, node0, "edge1".to_string(), None);
 
-        let edges = graph.edges_for_node(node0);
-        assert_eq!(edges, vec![2, 1, 0]);
+        assert_eq!(vec![2,1,0], graph.edges_for_node(node0));
     }
 }

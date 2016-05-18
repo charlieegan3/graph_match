@@ -66,6 +66,6 @@ mod tests {
             target: 0,
         };
         assert!(edge0.matches(&edge1));
-        assert_eq!(edge0.matches(&edge2), false);
+        assert_eq!(false, edge0.matches(&edge2));
     }
 }
