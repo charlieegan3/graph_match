@@ -1,6 +1,9 @@
 # graph_match
 
-[![Build Status](https://travis-ci.org/charlieegan3/graph_match.svg?branch=master)](https://travis-ci.org/charlieegan3/graph_match) [Cargo Crate](https://crates.io/crates/graph_match)
+[![Build Status](https://travis-ci.org/charlieegan3/graph_match.svg?branch=master)](https://travis-ci.org/charlieegan3/graph_match) 
+[![Coverage Status](https://coveralls.io/repos/github/charlieegan3/graph_match/badge.svg?branch=master)](https://coveralls.io/github/charlieegan3/graph_match?branch=master)
+[![MIT licensed](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE)
+[![](https://meritbadge.herokuapp.com/graph_match)](https://crates.io/crates/graph_match)
 
 A library for matching patterns in directed graphs. The library implements 
 'queries' for graphs as graphs that represent in part the nodes in the graph 
