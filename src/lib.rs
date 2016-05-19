@@ -4,7 +4,7 @@ mod edge;
 
 pub mod matching;
 
-pub fn match_graph(query: graph::Graph, query_root_index: node::Index, graph: graph::Graph) -> matching::MatchedComponents {
+pub fn match_graph(query: &graph::Graph, query_root_index: node::Index, graph: &graph::Graph) -> matching::MatchedComponents {
     let query_root_node = &query.nodes[query_root_index];
 
     let mut graph_root_index: Option<usize> = None;

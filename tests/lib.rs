@@ -65,7 +65,7 @@ fn match_complete_graph() {
         ]
     };
 
-    assert_eq!(expected, graph_match::match_graph(query_graph, 0, simple_graph));
+    assert_eq!(expected, graph_match::match_graph(&query_graph, 0, &simple_graph));
 }
 
 #[test]
@@ -94,7 +94,7 @@ fn match_subgraph() {
         ]
     };
 
-    assert_eq!(expected, graph_match::match_graph(query_graph, 0, simple_graph));
+    assert_eq!(expected, graph_match::match_graph(&query_graph, 0, &simple_graph));
 }
 
 #[test]
@@ -114,5 +114,5 @@ fn match_failure() {
 
     let expected = graph_match::matching::MatchedComponents { list: vec![] };
 
-    assert_eq!(expected, graph_match::match_graph(query_graph, 0, simple_graph));
+    assert_eq!(expected, graph_match::match_graph(&query_graph, 0, &simple_graph));
 }
