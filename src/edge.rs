@@ -20,17 +20,17 @@ impl Edge {
                             match edge_attrs.get(pair.0) {
                                 Some(value) => {
                                     if value != pair.1 {
-                                        return false
+                                        return false;
                                     }
-                                },
-                                None => return false
+                                }
+                                None => return false,
                             }
                         }
-                    },
-                    None => return false
+                    }
+                    None => return false,
                 }
-            },
-            None => return true
+            }
+            None => return true,
         }
         return true;
     }

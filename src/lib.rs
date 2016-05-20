@@ -35,4 +35,4 @@ pub fn expand_subgraph(
         }
 
         return node_list;
-}
+    }

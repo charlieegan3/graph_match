@@ -22,19 +22,19 @@ impl Node {
                             match node_attrs.get(pair.0) {
                                 Some(value) => {
                                     if value != pair.1 {
-                                        return false
+                                        return false;
                                     }
-                                },
-                                None => return false
+                                }
+                                None => return false,
                             }
                         }
-                    },
+                    }
                     // when node is empty and query is not then the node is not matched
-                    None => return false
+                    None => return false,
                 }
-            },
+            }
             // no attributes means a blank query
-            None => return true
+            None => return true,
         }
         return true;
     }

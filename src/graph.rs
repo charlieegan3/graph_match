@@ -11,10 +11,10 @@ pub struct Graph {
 impl Graph {
     pub fn add_node(&mut self, identifier: String, attributes: Option<HashMap<String,String>>)
         -> node::Index {
-        let index = self.nodes.len();
-        self.nodes.push(node::Node { identifier: identifier, first_outgoing_edge: None, attributes: attributes });
-        index
-    }
+            let index = self.nodes.len();
+            self.nodes.push(node::Node { identifier: identifier, first_outgoing_edge: None, attributes: attributes });
+            index
+        }
 
     pub fn add_edge(&mut self, source: node::Index, target: node::Index, identifier: String, attributes: Option<HashMap<String,String>>) {
         let edge_index = self.edges.len();
