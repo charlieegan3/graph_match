@@ -1,6 +1,6 @@
 [package]
 name = "graph_match"
-version = "0.2.3"
+version = "0.3.0"
 authors = ["Charlie Egan <git@charlieegan3.com>"]
 repository = "https://github.com/charlieegan3/graph_match"
 readme = "README.md"

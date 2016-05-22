@@ -83,7 +83,7 @@ fn match_complete_graph() {
         ],
     };
 
-    assert_eq!(expected,
+    assert_eq!(vec![expected],
                graph_match::match_graph(&query_graph, 0, &simple_graph));
 }
 
@@ -93,7 +93,11 @@ fn match_subgraph() {
         nodes: vec![],
         edges: vec![],
     };
-    let node0 = simple_graph.add_node("node0".to_string(), None);
+
+    let mut attributes: HashMap<String,String> = HashMap::new();
+    attributes.insert("type".to_string(), "root".to_string());
+
+    let node0 = simple_graph.add_node("node0".to_string(), Some(attributes.clone()));
     let node1 = simple_graph.add_node("node1".to_string(), None);
     let node2 = simple_graph.add_node("node2".to_string(), None);
     let node3 = simple_graph.add_node("node3".to_string(), None);
@@ -105,7 +109,7 @@ fn match_subgraph() {
         nodes: vec![],
         edges: vec![],
     };
-    let node0 = query_graph.add_node("node0".to_string(), None);
+    let node0 = query_graph.add_node("node0".to_string(), Some(attributes.clone()));
     let node1 = query_graph.add_node("node1".to_string(), None);
     let node2 = query_graph.add_node("node2".to_string(), None);
     query_graph.add_edge(node0, node1, "edge0".to_string(), None);
@@ -119,7 +123,7 @@ fn match_subgraph() {
         ],
     };
 
-    assert_eq!(expected,
+    assert_eq!(vec![expected],
                graph_match::match_graph(&query_graph, 0, &simple_graph));
 }
 
@@ -144,7 +148,45 @@ fn match_failure() {
     let node1 = query_graph.add_node("node1".to_string(), Some(attributes.clone()));
     query_graph.add_edge(node0, node1, "edge0".to_string(), Some(attributes.clone()));
 
-    let expected = graph_match::matching::MatchedComponents { list: vec![] };
+    let expected: Vec<graph_match::matching::MatchedComponents> = Vec::new();
+
+    assert_eq!(expected,
+               graph_match::match_graph(&query_graph, 0, &simple_graph));
+}
+
+#[test]
+fn match_multiple_subgraphs() {
+    let mut simple_graph = graph::Graph {
+        nodes: vec![],
+        edges: vec![],
+    };
+    let node0 = simple_graph.add_node("node0".to_string(), None);
+    let node1 = simple_graph.add_node("node1".to_string(), None);
+    let node2 = simple_graph.add_node("node2".to_string(), None);
+    let node3 = simple_graph.add_node("node2".to_string(), None);
+    simple_graph.add_edge(node0, node1, "edge0".to_string(), None);
+    simple_graph.add_edge(node2, node3, "edge1".to_string(), None);
+
+    let mut query_graph = graph::Graph {
+        nodes: vec![],
+        edges: vec![],
+    };
+    let node0 = query_graph.add_node("node0".to_string(), None);
+    let node1 = query_graph.add_node("node1".to_string(), None);
+    query_graph.add_edge(node0, node1, "edge0".to_string(), None);
+
+    let expected = vec![graph_match::matching::MatchedComponents {
+                            list: vec![
+                                graph_match::matching::Component { from_edge: None, node: 0},
+                                graph_match::matching::Component { from_edge: Some(0), node: 1},
+                            ],
+                        },
+                        graph_match::matching::MatchedComponents {
+                            list: vec![
+                                graph_match::matching::Component { from_edge: None, node: 2},
+                                graph_match::matching::Component { from_edge: Some(1), node: 3},
+                            ],
+                        }];
 
     assert_eq!(expected,
                graph_match::match_graph(&query_graph, 0, &simple_graph));
