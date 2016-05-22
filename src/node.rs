@@ -1,5 +1,7 @@
 use std::collections::HashMap;
 use edge;
+use matching;
+use matching::EqualityRequirement;
 
 pub type Index = usize;
 
@@ -10,7 +12,7 @@ pub struct Node {
 }
 
 impl Node {
-    pub fn matches(&self, node: &Node) -> bool {
+    pub fn matches(&self, node: &Node, equality: &EqualityRequirement) -> bool {
         // test the attributes
         match self.attributes {
             Some(ref attrs) => {
@@ -21,7 +23,7 @@ impl Node {
                         for pair in attrs {
                             match node_attrs.get(pair.0) {
                                 Some(value) => {
-                                    if value != pair.1 {
+                                    if !matching::values_match(value, pair.1, &equality) {
                                         return false;
                                     }
                                 }
@@ -43,9 +45,10 @@ impl Node {
 #[cfg(test)]
 mod tests {
     use std::collections::HashMap;
+    use matching::EqualityRequirement;
     use super::*;
     #[test]
-    fn node_equality() {
+    fn node_complete_equality() {
         let mut attributes = HashMap::new();
         attributes.insert("key".to_string(), "value".to_string());
         let mut attributes2 = HashMap::new();
@@ -66,7 +69,27 @@ mod tests {
             attributes: Some(attributes2.clone()),
             first_outgoing_edge: None,
         };
-        assert!(node0.matches(&node1));
-        assert_eq!(node0.matches(&node2), false);
+        assert!(node0.matches(&node1, &EqualityRequirement::Complete));
+        assert_eq!(false, node0.matches(&node2, &EqualityRequirement::Complete));
+    }
+
+    #[test]
+    fn node_contains_equality() {
+        let mut attributes = HashMap::new();
+        attributes.insert("key".to_string(), "value".to_string());
+        let mut attributes2 = HashMap::new();
+        attributes2.insert("key".to_string(), "the values".to_string());
+
+        let node0 = Node {
+            identifier: "nodeid".to_string(),
+            attributes: Some(attributes.clone()),
+            first_outgoing_edge: None,
+        };
+        let node1 = Node {
+            identifier: "nodeid".to_string(),
+            attributes: Some(attributes2.clone()),
+            first_outgoing_edge: None,
+        };
+        assert!(node0.matches(&node1, &EqualityRequirement::Contains));
     }
 }

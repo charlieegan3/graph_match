@@ -2,6 +2,7 @@ extern crate graph_match;
 
 use std::collections::HashMap;
 use graph_match::graph;
+use graph_match::matching::EqualityRequirement;
 
 #[test]
 fn traversal_simple() {
@@ -84,7 +85,7 @@ fn match_complete_graph() {
     };
 
     assert_eq!(vec![expected],
-               graph_match::match_graph(&query_graph, 0, &simple_graph));
+               graph_match::match_graph(&query_graph, 0, &simple_graph, &EqualityRequirement::Complete));
 }
 
 #[test]
@@ -124,7 +125,7 @@ fn match_subgraph() {
     };
 
     assert_eq!(vec![expected],
-               graph_match::match_graph(&query_graph, 0, &simple_graph));
+               graph_match::match_graph(&query_graph, 0, &simple_graph, &EqualityRequirement::Complete));
 }
 
 #[test]
@@ -151,7 +152,7 @@ fn match_failure() {
     let expected: Vec<graph_match::matching::MatchedComponents> = Vec::new();
 
     assert_eq!(expected,
-               graph_match::match_graph(&query_graph, 0, &simple_graph));
+               graph_match::match_graph(&query_graph, 0, &simple_graph, &EqualityRequirement::Complete));
 }
 
 #[test]
@@ -189,5 +190,5 @@ fn match_multiple_subgraphs() {
                         }];
 
     assert_eq!(expected,
-               graph_match::match_graph(&query_graph, 0, &simple_graph));
+               graph_match::match_graph(&query_graph, 0, &simple_graph, &EqualityRequirement::Complete));
 }

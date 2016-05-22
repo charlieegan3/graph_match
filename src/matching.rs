@@ -13,13 +13,34 @@ pub struct MatchedComponents {
     pub list: Vec<Component>,
 }
 
+pub enum EqualityRequirement {
+    Complete,
+    Contains, /* Unimplemented:
+               * - AsPattern
+               * - Begins
+               * - Ends
+               * - IgnoreCase */
+}
+
+pub fn values_match(value1: &String, value2: &String, equality: &EqualityRequirement) -> bool {
+    match *equality {
+        EqualityRequirement::Complete => {
+            return value1 == value2;
+        },
+        EqualityRequirement::Contains => {
+            return value1.contains(value2);
+        },
+    }
+}
+
 pub fn recusive_node_match(query_root_index: usize,
                            graph_root_index: usize,
                            query: &graph::Graph,
                            graph: &graph::Graph,
-                           source_edge: Option<edge::Index>)
+                           source_edge: Option<edge::Index>,
+                           equality: &EqualityRequirement)
                            -> MatchedComponents {
-    if !query.nodes[query_root_index].matches(&graph.nodes[graph_root_index]) {
+    if !query.nodes[query_root_index].matches(&graph.nodes[graph_root_index], &equality) {
         return MatchedComponents { list: vec![] };
     }
 
@@ -37,7 +58,7 @@ pub fn recusive_node_match(query_root_index: usize,
     for query_edge_index in query.edges_for_node(query_root_index) {
         let mut matching_edge_in_graph: Option<edge::Index> = None;
         for graph_edge_index in graph.edges_for_node(graph_root_index) {
-            if query.edges[query_edge_index].matches(&graph.edges[graph_edge_index]) {
+            if query.edges[query_edge_index].matches(&graph.edges[graph_edge_index], &equality) {
                 matching_edge_in_graph = Some(graph_edge_index);
                 break;
             }
@@ -45,7 +66,7 @@ pub fn recusive_node_match(query_root_index: usize,
         match matching_edge_in_graph {
             Some(edge) => {
                 match query.nodes[query.edges[query_edge_index].target]
-                    .matches(&graph.nodes[graph.edges[edge].target]) {
+                    .matches(&graph.nodes[graph.edges[edge].target], &equality) {
                     true => {
                         let descendents =
                             recusive_node_match(query.edges[query_edge_index].target,
@@ -53,7 +74,8 @@ pub fn recusive_node_match(query_root_index: usize,
                                                     .target,
                                                 &query,
                                                 &graph,
-                                                Some(edge));
+                                                Some(edge),
+                                                &equality);
                         for descendent in descendents.list {
                             matched_components.list.push(descendent);
                         }
